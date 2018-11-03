@@ -37,5 +37,5 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   console.error(err)
-  res.send('There was an error')
+  res.json({error: err})
 });

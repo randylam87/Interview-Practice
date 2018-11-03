@@ -67,34 +67,6 @@ exports.users = (req, res, next) =>
                         })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // User.countDocuments({}, function(err, count){
   //   if(err){res.json(err)}
   //   console.log('User Count is =', count);
