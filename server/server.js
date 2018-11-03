@@ -1,4 +1,5 @@
 const express = require('express');
+const createError = require('http-errors');
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 8000;
@@ -6,16 +7,15 @@ const apiRouter = require('./routes/apiRoutes');
 
 const mongoose = require('mongoose');
 const mongoDB = process.env.MONGODB_URI || 'mongodb://fa01:abcd55@ds157549.mlab.com:57549/local-library-5';
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(express.static(__dirname + '/public'));
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -36,5 +36,6 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.error(err)
+  res.send('There was an error')
 });

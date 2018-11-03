@@ -4,7 +4,7 @@ const User = require('../models/users');
 
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://test:abc123@ds249583.mlab.com:49583/practice';
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -55,13 +55,46 @@ exports.todos = function(req, res, next){
   });
 };
 
-exports.users = function(req, res, next){
-  console.log('Start of Get Users')
-  db.listCollections.toArray(function (err, names) {
-    console.log(names); // [{ name: 'dbname.myCollection' }]
-    res.json({'express': "users!"});
-  });
-  
+exports.users = (req, res, next) => 
+  mongoose.connection.db.listCollections({name: 'users'})
+                        .next((error, usersData) => {
+                          if(usersData){
+                            console.log(usersData);
+                            res.json(usersData)
+                          } else {
+                            res.json({ error: 'No user data' })
+                          }
+                        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // User.countDocuments({}, function(err, count){
   //   if(err){res.json(err)}
   //   console.log('User Count is =', count);
@@ -109,4 +142,3 @@ exports.users = function(req, res, next){
   //       });
   //   }
   // });  
-}
